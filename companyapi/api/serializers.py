@@ -10,7 +10,7 @@ class CompanySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Company
-        fields = "__all__" # I want to include all fields of Company Model
+        fields = "__all__" # I want to include all fields of Company Model, if I want to hide some column then give ['col1', 'col2',...]
 
 
 # Employee serializer

@@ -14,7 +14,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
     # use the following serializer class for serializing the resultset
     serializer_class = CompanySerializer
 
-    # for custom URLs
+    # for custom URLs=======================>>>>>>>>>
     # companies/{company_id}/employees
     @action(detail=True, methods=['get'])
     def employees(self, request, pk = None):
