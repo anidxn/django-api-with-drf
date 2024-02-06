@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # ------- serializer -----------
 from .serializers import TaskSerializer
+from .models import Task
 
 
 @api_view()     # by default allow GET only
@@ -43,22 +44,23 @@ def home(request):
 @api_view(['POST'])
 def post_task(request):
     try:
-        pdata = request.data        # get the request data
-        serializer = TaskSerializer(data = pdata)   # initialize an Serializer object with request data
+        post_data = request.data        # get the request data
+        serializer = TaskSerializer(data = post_data)   # initialize an Serializer object with request data, i. serializes data ii. can be used to validate data format
 
-        # validate serializer data i.e. if user supplied less or excessive data fields
+        # validate serializer data i.e. if user supplied less or excessive data fields as specified in the Serializer(here it contains __all__ fields of the Model)
         if serializer.is_valid():
-            print(serializer.data)
+            serializer.save()       # save data to db
+            print("Data = ", serializer.data)
 
             return Response({
                 "status" : True,
-                "message": "valid data",
+                "message": "Task created successfully",
                 'data' : serializer.data
             })
         else:
             return Response({
                 "status" : False,
-                "message": "In valid data",
+                "message": "Invalid data",
                 'data' : serializer.errors
             })
     
@@ -66,4 +68,16 @@ def post_task(request):
         return Response({
             "status" : False,
             "message": "Something went wrong",
+        })
+
+#----------------- get data -------------
+@api_view(['GET'])
+def get_task(request):
+    task_list = Task.objects.all()
+    serializer = TaskSerializer(task_list, many = True)  # many = True --> bcz of many record objects are populated
+
+    return Response({
+            "status" : True,
+            "message": "Record fetched",
+            "Data" : serializer.data
         })

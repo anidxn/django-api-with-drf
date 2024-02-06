@@ -5,4 +5,5 @@ urlpatterns = [
     path("hello/", views.get_name),
     path("home/", views.home),
     path("post_task/", views.post_task),
+    path("gettask/", views.get_task),
 ]
