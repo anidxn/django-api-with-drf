@@ -1,6 +1,8 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
 from rest_framework.response import Response
+
+#-------------- decorator for action (custom API) ------------------
+from rest_framework.decorators import action
 
 from api.models import Company, Employee
 from api.serializers import CompanySerializer, EmployeeSerializer
@@ -14,9 +16,10 @@ class CompanyViewSet(viewsets.ModelViewSet):
 
     # for custom URLs=======================>>>>>>>>>
     # companies/{company_id}/employees
+    
     @action(detail=True, methods=['get'])
     def employees(self, request, pk = None):
-        # print("get employees of ", pk, "company")
+        
         try:
             #-- get the company base on the id (here it is pkey)..Qs. wht if the search criteria is not pkey??
             comp = Company.objects.get(pk = pk)

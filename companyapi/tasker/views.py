@@ -1,8 +1,11 @@
+#--------------- decorator ----------------
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # ------- serializer -----------
 from .serializers import TaskSerializer
 from .models import Task
+# ---------------- APIView ------------------
+from rest_framework.views import APIView
 
 
 @api_view()     # by default allow GET only
@@ -81,3 +84,79 @@ def get_task(request):
             "message": "Record fetched",
             "Data" : serializer.data
         })
+
+@api_view(['PATCH'])
+def patch_task(request):
+    try:
+        post_data = request.data
+        if not post_data.get('uid'):   # data MUST contain the primary key
+            return Response({
+                "status" : False,
+                "message": "UID is required",
+            })
+        
+        obj = Task.objects.get(uid = post_data.get('uid'))   # get the object ref which will be updated with new data
+        serializer = TaskSerializer(obj, data = post_data, partial = True)  # destination, Source, Update mode
+
+        # ------------ same as post ---------
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "status" : True,
+                "message": "Task updated successfully",
+                'data' : serializer.data
+            })
+        else:
+            return Response({
+                "status" : False,
+                "message": "Invalid data",
+                'data' : serializer.errors
+            })
+    
+    except Exception as e:
+        return Response({
+            "status" : False,
+            "message": "Something went wrong",
+        })
+
+
+# =======================================================================================
+#   Issue with prev approach: define all methods individually + keep separate URLs for calling them
+#   sol: Define a class vased view inheritted from APIView
+#   APIView already has 5 function - GET, POST, PUT, PATCH, DELETE, u just need to override them
+# =======================================================================================
+class TaskView(APIView):
+    def get(self, request):
+        return Response({
+                "status" : 200,
+                "message": "DRF Called",
+                "method_called" : "U called GET"
+            })
+
+    def post(self, request):
+        return Response({
+                "status" : 200,
+                "message": "DRF Called",
+                "method_called" : "U called POST"
+            })
+    
+    def patch(self, request):
+        return Response({
+                "status" : 200,
+                "message": "DRF Called",
+                "method_called" : "U called PATCH"
+            })
+    
+    def put(self, request):
+        return Response({
+                "status" : 200,
+                "message": "DRF Called",
+                "method_called" : "U called PUT"
+            })
+    
+    def delete(self, request):
+        return Response({
+                "status" : 200,
+                "message": "DRF Called",
+                "method_called" : "U called DELETE"
+            })

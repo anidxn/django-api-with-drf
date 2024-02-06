@@ -18,3 +18,8 @@ class Task(BaseModel):
 
     def __str__(self):
         return self.task_title
+
+
+class TimingTask(BaseModel):
+    task = models.ForeignKey(Task, on_delete = models.CASCADE)
+    timing = models.DateField()

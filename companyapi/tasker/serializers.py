@@ -1,16 +1,22 @@
 from rest_framework import serializers
-from .models import Task
-# regular expression
+from .models import Task, TimingTask
+# regular expression for validation
 import re
+
+from django.template.defaultfilters import slugify
 
 # Task Serializer
 class TaskSerializer(serializers.ModelSerializer):
     uid = serializers.ReadOnlyField()    #*** variable name should be same as the table column name – use dbbrowser
+    slug = serializers.SerializerMethodField()  #intialize a slug with defined function
 
     class Meta:
         model = Task
-        # fields = "__all__"   # To restric use ['', '', '', ...]
+        # fields = "__all__"   # To restric use ['', '', '', 'slug']
         exclude = ['created_at', 'updated_at']
+    
+    def get_slug(self, obj):
+        return slugify(obj.task_title)
 
 
     def validate(self, validated_data):
@@ -44,3 +50,13 @@ class TaskSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('Too small description')
         
         return data
+    
+
+# ============================================
+#       
+# ============================================
+    
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimingTask
+        exclude = ['created_at', 'updated_at']
