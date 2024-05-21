@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Task, TimingTask
+from .models import Task, TimingTask, Product
 # regular expression for validation
 import re
 
@@ -56,7 +56,13 @@ class TaskSerializer(serializers.ModelSerializer):
 #       
 # ============================================
     
-class TaskSerializer(serializers.ModelSerializer):
+class TimingTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimingTask
         exclude = ['created_at', 'updated_at']
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description', 'price']

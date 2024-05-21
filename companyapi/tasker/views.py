@@ -7,6 +7,12 @@ from .models import Task
 # ---------------- APIView ------------------
 from rest_framework.views import APIView
 
+# ------------ for product class based view ------------
+from rest_framework import generics
+from .models import Product
+from .serializers import ProductSerializer
+from rest_framework import filters
+
 
 @api_view()     # by default allow GET only
 def get_name(request):
@@ -160,3 +166,11 @@ class TaskView(APIView):
                 "message": "DRF Called",
                 "method_called" : "U called DELETE"
             })
+    
+
+
+class ProductSearchView(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'description']

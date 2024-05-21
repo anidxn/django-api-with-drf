@@ -9,4 +9,7 @@ urlpatterns = [
     path("patch_task/", views.patch_task),
     # ------------ view class --------------------
     path("tasks/", views.TaskView.as_view()),   # call all the http methods with this single path
+
+    # -------- product view class ------------
+    path('products/', views.ProductSearchView.as_view(), name='product-search'),
 ]
