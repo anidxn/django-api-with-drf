@@ -21,6 +21,9 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('getdata/', views.get_api_data, name='get-data'),
+    path('postdata/', views.do_post_data, name='post-data'),
+    path('putdata/<int:compid>/', views.do_put_data, name='edit-company'),
+    path('deldata/<int:compid>/', views.do_delete_data, name='del-company'),
     path('home/', views.home, name='home'),
     # path('', include('getpost.url_getpost'))
 ]

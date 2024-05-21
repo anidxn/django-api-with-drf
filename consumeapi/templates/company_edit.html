@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title%} Compant - add {% endblock title%}
+
+{% block body%}
+<div class="container py-4">
+    <h1>Company details</h1>
+    <form action="" method="POST">
+      {% csrf_token %}
+
+      {% with data=apidata %}
+
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" id="txtName" name="txtName" value="{{ data.name }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Location</label>
+        <input type="text" class="form-control" id="txtLoc" name="txtLoc" value="{{ data.location }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">About</label>
+        <textarea class="form-control" id="txtAbout" name="txtAbout" rows="3">{{ data.about }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Type</label>
+        <select class="form-control" id="ddlType" name="ddlType">
+            <option value="IT">Info Tech</option>
+            <option value="NON IT">IT Infra</option>
+            <option value="COMM">Telecom</option>
+        </select>    
+      </div>
+            
+      <div class="mb-3">
+        <label class="form-label">Active ?</label>
+        <div class="form-check form-switch">
+            {% comment %} {% if data.is_staff %}
+                <input class="form-check-input chkstaff" type="checkbox" role="switch" data-uid="{{data.id}}" checked>   <!-- HERE class is used instead of id bcz of array-->
+            {% else %} {% endcomment %}
+                <input class="form-check-input chkstaff" type="checkbox" role="switch" name="chkActive">
+            {% comment %} {% endif %} {% endcomment %}
+          </div>
+      </div>
+  
+      
+      <button type="submit" class="btn btn-primary"> Update </button>
+
+      {% endwith %}
+      
+    </form>
+  </div>
+{% endblock body%}

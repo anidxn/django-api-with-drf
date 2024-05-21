@@ -1,0 +1,91 @@
+def make_get_request():
+    url = 'https://api.example.com/resource'
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()  # Assuming the response is in JSON format
+        return data
+    else:
+        return None
+
+
+def make_post_request():
+    url = 'https://api.example.com/resource'
+    payload = {
+        'key1': 'value1',
+        'key2': 'value2'
+    }
+    response = requests.post(url, json=payload)
+    
+    if response.status_code == 201:
+        data = response.json()
+        return data
+    else:
+        return None
+
+		
+		
+def make_put_request():
+    url = 'https://api.example.com/resource/1'
+    payload = {
+        'key1': 'new_value1',
+        'key2': 'new_value2'
+    }
+    response = requests.put(url, json=payload)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        return None
+
+def make_delete_request():
+    url = 'https://api.example.com/resource/1'
+    response = requests.delete(url)
+    
+    if response.status_code == 204:
+        return 'Resource deleted successfully'
+    else:
+        return 'Failed to delete resource'
+
+
+def make_patch_request():
+    url = 'https://api.example.com/resource/1'
+    payload = {
+        'key1': 'updated_value1'
+    }
+    response = requests.patch(url, json=payload)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        return None
+
+
+
+
+Using the Functions in Your Django Views
+=================================================
+from django.http import JsonResponse
+from .api_calls import make_get_request, make_post_request
+
+def get_data_view(request):
+    data = make_get_request()
+    if data:
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'error': 'Failed to retrieve data'}, status=500)
+
+def create_data_view(request):
+    if request.method == 'POST':
+        data = make_post_request()
+        if data:
+            return JsonResponse(data, status=201)
+        else:
+            return JsonResponse({'error': 'Failed to create data'}, status=500)
+			
+			
+    * Always handle exceptions and errors properly. Use try-except blocks to catch and handle potential issues.
+    * Make sure to check the API documentation for the correct URL endpoints, request methods, and payload formats.
+    * You might need to handle authentication (e.g., API keys, tokens) depending on the API you're interacting with. Include the necessary headers in your requests as needed.
