@@ -34,11 +34,11 @@
       <div class="mb-3">
         <label class="form-label">Active ?</label>
         <div class="form-check form-switch">
-            {% comment %} {% if data.is_staff %}
-                <input class="form-check-input chkstaff" type="checkbox" role="switch" data-uid="{{data.id}}" checked>   <!-- HERE class is used instead of id bcz of array-->
-            {% else %} {% endcomment %}
-                <input class="form-check-input chkstaff" type="checkbox" role="switch" name="chkActive">
-            {% comment %} {% endif %} {% endcomment %}
+            {% if data.active %}
+                <input class="form-check-input" type="checkbox" role="switch" name="chkActive" checked>   <!-- HERE class is used instead of id bcz of array-->
+            {% else %}
+                <input class="form-check-input" type="checkbox" role="switch" name="chkActive" >
+            {% endif %}
           </div>
       </div>
   

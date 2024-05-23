@@ -34,13 +34,19 @@ def do_post_data(request):
             cabout = request.POST.get('txtAbout')
             ctype = request.POST.get('ddlType')
             # cstatus = request.POST.get('rating') checkbox handling later
+            cstatus = False
+            if 'chkActive' in request.POST:
+                # Checkbox was checked
+                cstatus = True  #  checkbox_value = request.POST.get('my_checkbox')
+            else:
+                cstatus = False 
 
             payload = {
                 'name': cname,
                 'location': clocation,
                 'about': cabout,
                 'type': ctype,
-                'active' : True
+                'active' : cstatus
             }
 
             response = requests.post(url, json = payload)  # send as JSON
@@ -74,13 +80,19 @@ def do_put_data(request, compid):
         cabout = request.POST.get('txtAbout')
         ctype = request.POST.get('ddlType')
         # cstatus = request.POST.get('rating') checkbox handling later
+        cstatus = False
+        if 'chkActive' in request.POST:
+            # Checkbox was checked
+            cstatus = True  #  checkbox_value = request.POST.get('my_checkbox')
+        else:
+            cstatus = False
 
         payload = {
             'name': cname,
             'location': clocation,
             'about': cabout,
             'type': ctype,
-            'active' : True
+            'active' : cstatus
         }
 
         response = requests.put(url, json = payload)  # send as JSON
