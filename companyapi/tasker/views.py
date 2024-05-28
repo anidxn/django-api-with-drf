@@ -8,18 +8,27 @@ from .models import Task
 from rest_framework.views import APIView
 
 # ------------ for product class based view ------------
-from rest_framework import generics
+from rest_framework import generics, filters
 from .models import Product
 from .serializers import ProductSerializer
-from rest_framework import filters
 
 
 @api_view()     # by default allow GET only
 def get_name(request):
+    """
     return Response({
         "status" : 200,
         "message": "Hello, world!"
         })
+    """
+    """
+    person = {'name': 'Ani', 'age' : 29}
+    return Response(person)
+    """
+
+    task_list = Task.objects.all()
+    serializer = TaskSerializer(task_list, many = True)
+    return Response(serializer.data)
 
 @api_view(['GET', 'POST', 'PATCH'])
 def home(request):
@@ -49,7 +58,7 @@ def home(request):
         "method_called" : "U called an Invalid method"
         })
 
-# ------------------------------------------
+# ---------------------Store a task by POST ---------------------
 @api_view(['POST'])
 def post_task(request):
     try:
@@ -91,6 +100,7 @@ def get_task(request):
             "Data" : serializer.data
         })
 
+# ----------- Update some fields ----------
 @api_view(['PATCH'])
 def patch_task(request):
     try:
@@ -168,9 +178,10 @@ class TaskView(APIView):
             })
     
 
-
+# SEraching a product using API --> select * from table where pname='...' or description = '....'
 class ProductSearchView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter]  #--> Default style
     search_fields = ['name', 'description']
+    filterset_fields = ['price']

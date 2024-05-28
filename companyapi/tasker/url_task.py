@@ -11,5 +11,6 @@ urlpatterns = [
     path("tasks/", views.TaskView.as_view()),   # call all the http methods with this single path
 
     # -------- product view class ------------
-    path('products/', views.ProductSearchView.as_view(), name='product-search'),
+    path('products/', views.ProductSearchView.as_view(), name='product-search'),   
+    # TEST URL: http://localhost:8085/api/tasker/products/?search=your_search_term
 ]

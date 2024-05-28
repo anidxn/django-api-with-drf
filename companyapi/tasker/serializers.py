@@ -13,30 +13,34 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         # fields = "__all__"   # To restric use ['', '', '', 'slug']
-        exclude = ['created_at', 'updated_at']
+        exclude = ['created_at', 'updated_at']   
+        """ These two fields are auto- fields + after POST data is success, the response returned 
+        from the server contains these two field, which I dont which I don't want, so exclude """
     
     def get_slug(self, obj):
         return slugify(obj.task_title)
 
-
+    # Data validation using regular expression using serializers (better than views)
     def validate(self, validated_data):
         # validate that title should not have any special symbol
         if validated_data.get('task_title'):
             # grab title from received data
             title = validated_data['task_title']
 
-            regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+            regex = re.compile("[@_!#$%^&*()<>?/\\|}{~:]")
      
             # Pass the string in search method of regex object.    
             if not (regex.search(title) == None):
                 raise serializers.ValidationError('Title can not contain special characters')
         
         # validate description for length - This works perfectly, we can also validate a specific field like below
-        # if  validated_data.get('task_desc'):
-        #     desc = validated_data['task_desc']
+        """
+        if validated_data.get('task_desc'):
+            desc = validated_data['task_desc']
 
-        #     if len(desc) < 3:
-        #         raise serializers.ValidationError('Too small description')
+            if len(desc) < 3:
+                raise serializers.ValidationError('Too small description')
+        """
             
         # if all ok above then come here & return the received data 
         return validated_data
