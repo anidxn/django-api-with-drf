@@ -7,10 +7,14 @@ from .models import Task
 # ---------------- APIView ------------------
 from rest_framework.views import APIView
 
-# ------------ for product class based view ------------
-from rest_framework import generics, filters
+# ------------ for product class based view & search on that------------
 from .models import Product
 from .serializers import ProductSerializer
+
+from rest_framework import generics, filters
+# ---- for custom serach filter ---
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import ProductFilter
 
 
 @api_view()     # by default allow GET only
@@ -179,9 +183,29 @@ class TaskView(APIView):
     
 
 # SEraching a product using API --> select * from table where pname='...' or description = '....'
+
+
+
 class ProductSearchView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter]  #--> Default style
+    #filter_backends = [filters.SearchFilter]  #--> Default style
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['name', 'description']
-    filterset_fields = ['price']
+    # filterset_fields = ['price']   --> ommit if custom filter class is used
+    filterset_class = ProductFilter
+
+"""
+http://localhost:8085/api/tasker/products/?search=laptop
+
+http://localhost:8085/api/tasker/products/?price=80000
+
+http://localhost:8085/api/tasker/products/?search=laptop&price=80000
+
+http://localhost:8085/api/tasker/products/?price__gte=80000
+
+http://localhost:8085/api/tasker/products/?price__lte=80000
+
+http://localhost:8085/api/tasker/products/?price__lt=80000
+    """
+    

@@ -38,10 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
+    #'rest_framework.authtoken',
     'api',
     'tasker',
     'accounts',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -142,12 +143,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # }
 
 # ============= Login Authntication ===============
-#AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#        # 'rest_framework.authentication.SessionAuthentication'
+#     ],
+#     # Other settings...
+# }
+
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-       # 'rest_framework.authentication.SessionAuthentication'
+    # for custom Search-----
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
     ],
-    # Other settings...
+    # for pagination--------
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }

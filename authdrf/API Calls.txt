@@ -39,3 +39,13 @@ curl -X POST -H "Authorization: Token YOUR_AUTH_TOKEN" http://localhost:8088/api
 
 --------------------- SEARCH with keyword --------------------------------
 http://localhost:8085/api/tasker/products/?search=your_search_term
+
+
+
+
+
+
+
+
+
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
