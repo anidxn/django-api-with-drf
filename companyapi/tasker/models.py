@@ -3,7 +3,11 @@ from django.db import models
 import uuid
 
 class BaseModel(models.Model):
+    # UUID is used to create unique ids of records. It is used in place of sequential numbers (AutoField), which makes it safer and prevents direct object access attack
+    
     uid = models.UUIDField(primary_key = True, editable = False, default = uuid.uuid4())
+    # task_id = models.AutoField(primary_key=True) 
+
     created_at = models.DateField(auto_now_add = True) # will set the timezone.now() only when the instance is created.
     updated_at = models.DateField(auto_now = True)  # will update the field every time the save method is called.
 

@@ -92,7 +92,10 @@ def post_task(request):
             "message": "Something went wrong",
         })
 
-#----------------- get data -------------
+#----------------- get All data ----------------------------
+# CALL : GET: http://localhost:8085/api/tasker/gettask
+#---------------------------------------------------------
+
 @api_view(['GET'])
 def get_task(request):
     task_list = Task.objects.all()
@@ -104,9 +107,26 @@ def get_task(request):
             "Data" : serializer.data
         })
 
-# ----------- Update some fields ----------
-@api_view(['PATCH'])
-def patch_task(request):
+# ------------- GET a single record based on Okey = Uid-----------
+# CALL : http://localhost:8085/api/tasker/task-detail/c21dd2d2-f7bf-4abc-96d5-d45d98957b27/
+# ------------------------------------------------------------------------------------------
+
+@api_view(['GET'])
+def task_detail(request, pk):
+    sel_task = Task.objects.get(uid=pk)
+    serializer = TaskSerializer(sel_task, many = False)  # many = False --> only 1 object fetched
+
+    return Response({
+            "status" : True,
+            "message": "Record fetched with the given id",
+            "Data" : serializer.data
+        })
+
+# ----------- Update ALL fields (PUT)------------------
+# CALL: http://localhost:8085/api/tasker/update_task/
+# ------------------------------------------------------
+@api_view(['PUT'])
+def put_task(request):     # here UID is passed as a body parameter (json data), rather than a fixed id in URL
     try:
         post_data = request.data
         if not post_data.get('uid'):   # data MUST contain the primary key
@@ -116,11 +136,12 @@ def patch_task(request):
             })
         
         obj = Task.objects.get(uid = post_data.get('uid'))   # get the object ref which will be updated with new data
-        serializer = TaskSerializer(obj, data = post_data, partial = True)  # destination, Source, Update mode
+        serializer = TaskSerializer(obj, data = post_data)  # destination, Source, Update mode =>partial = False => update all fields
 
         # ------------ same as post ---------
         if serializer.is_valid():
             serializer.save()
+
             return Response({
                 "status" : True,
                 "message": "Task updated successfully",
@@ -138,6 +159,57 @@ def patch_task(request):
             "status" : False,
             "message": "Something went wrong",
         })
+
+
+# ----------- Update some fields ----------
+@api_view(['PATCH'])
+def patch_task(request):        # here UID is passed as a body parameter (json data), rather than a fixed id in URL
+    try:
+        post_data = request.data
+        if not post_data.get('uid'):   # data MUST contain the primary key
+            return Response({
+                "status" : False,
+                "message": "UID is required",
+            })
+        
+        obj = Task.objects.get(uid = post_data.get('uid'))   # get the object ref which will be updated with new data
+        serializer = TaskSerializer(obj, data = post_data, partial = True)  # destination, Source, Update mode = partial for PATCH
+
+        # ------------ same as post ---------
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "status" : True,
+                "message": "Task updated successfully",
+                'data' : serializer.data
+            })
+        else:
+            return Response({
+                "status" : False,
+                "message": "Invalid data",
+                'data' : serializer.errors
+            })
+    
+    except Exception as e:
+        return Response({
+            "status" : False,
+            "message": "Something went wrong",
+        })
+    
+# ----------- Delete a task------------------
+# CALL: http://localhost:8085/api/tasker/task-delete/301ea7f3-098c-4cd3-9c06-393be678e42f/
+# ------------------------------------------------------
+@api_view(['DELETE'])
+def del_task(request, pk):
+    sel_task = Task.objects.get(uid=pk)
+    sel_task.delete()
+
+    return Response({
+            "status" : True,
+            "message": "Record deleted",
+        })
+
 
 
 # =======================================================================================
@@ -183,9 +255,7 @@ class TaskView(APIView):
     
 
 # SEraching a product using API --> select * from table where pname='...' or description = '....'
-
-
-
+# ---------------------------------------------------------------------------------------------------
 class ProductSearchView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -207,5 +277,6 @@ http://localhost:8085/api/tasker/products/?price__gte=80000
 http://localhost:8085/api/tasker/products/?price__lte=80000
 
 http://localhost:8085/api/tasker/products/?price__lt=80000
-    """
+
+"""
     
