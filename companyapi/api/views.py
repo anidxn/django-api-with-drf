@@ -30,7 +30,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
             """
                 many = True --> lots of data
             """
-            # == return the response
+            # return the response
             return Response(emps_serializer.data) # send API response in JSON format
         except Exception as e:
             print(e)  # displays message in console

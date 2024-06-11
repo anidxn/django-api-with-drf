@@ -279,4 +279,24 @@ http://localhost:8085/api/tasker/products/?price__lte=80000
 http://localhost:8085/api/tasker/products/?price__lt=80000
 
 """
+
+#-------------------------------------------------------------
+#               SEARCH by Date Range
+#-------------------------------------------------------------
+class TaskListAPIView(generics.ListAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        if start_date and end_date:
+            queryset = queryset.filter(updated_at__range=[start_date, end_date])
+        return queryset
+    
+
+"""
+http://localhost:8085/api/tasker/taskbydate/?start_date=2023-01-01&end_date=2023-12-31
+"""
+
     

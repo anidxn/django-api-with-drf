@@ -12,8 +12,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        # fields = "__all__"   # To restric use ['', '', '', 'slug']
-        exclude = ['created_at', 'updated_at']   
+        fields = "__all__"   # To restric use ['', '', '', 'slug']
+        # exclude = ['created_at', 'updated_at']   
         """ These two fields are auto- fields + after POST data is success, the response returned 
         from the server contains these two field, which I dont which I don't want, so exclude """
     
