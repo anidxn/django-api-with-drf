@@ -1,0 +1,41 @@
+POST
+http://localhost:8500/authapp/api/register/
+
+Body > Raw > JSON
+{
+    "username": "amit",
+    "password": "123",
+    "email": "amit@asd.com"
+}
+
+output
+=======
+{
+    "user": {
+        "id": 1,
+        "username": "amit",
+        "email": "amit@asd.com"
+    }
+}
+
+Login>>>>>>>>>>>>>>>
+POST
+-----------------------
+http://localhost:8500/authapp/api/login/
+
+Body > Raw > JSON
+{
+    "username": "amit",
+    "password": "123"
+}
+
+Output
+=======
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxOTA4OTAwOCwiaWF0IjoxNzE5MDAyNjA4LCJqdGkiOiJmMWU0YjY3MTU2YTA0NGJhODNiZGI4NjEzYjliMjU4YyIsInVzZXJfaWQiOjF9.oUd7syi0EmJQXnibENiKbKZNYBPYomlmY4eS6q-Bh-s",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MDAyOTA4LCJpYXQiOjE3MTkwMDI2MDgsImp0aSI6IjE4NDFiMWUyZGEyNTRhMWVhNDk1Nzg4MmE1YzMwZWZkIiwidXNlcl9pZCI6MX0.mfw1q7KSBFLDxRoMU8Ln3m2lITah-3XTTMsFwhyxwck"
+}
+
+
+
+
