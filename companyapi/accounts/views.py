@@ -46,7 +46,7 @@ class LoginAPI(generics.GenericAPIView):
 
         user = serializer.validated_data
 
-        login(request, user)
+        login(request, user) # XXXXXXXXXXXXX --> Must authenticate(). login() just sets user if to the session
         # get any existing token or create one
         token, created = Token.objects.get_or_create(user=user)
 
@@ -60,7 +60,7 @@ class LogoutAPI(APIView):
         try:
             # Delete the user's token to logout
             request.user.auth_token.delete()
-            logout(request)
+            logout(request)  # XXXXXXXXXXXXX --> not req. for token based auth
             # return Response(status=status.HTTP_204_NO_CONTENT)
             return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
         except Exception as e:
