@@ -26,7 +26,17 @@ def register_user(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+"""
+POST
+http://localhost:8088/api/register/
+{
+    "username": "testuser", 
+    "password": "testpassword", 
+    "email": "test@example.com"
+}
+"""
+
 
 # ----------------- LOGIN ------------------
 @api_view(['POST'])
@@ -47,13 +57,28 @@ def user_login(request):
 
         if user:
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+            # return Response({'token': token.key}, status=status.HTTP_200_OK)
+            return Response({
+                'act_uname' : username, 
+                'token': token.key
+                }, status=status.HTTP_200_OK)
 
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
+"""
+POST
+http://localhost:8088/api/login/
+
+{
+    "username": "testuser",
+    "password": "testpassword"
+}
+"""
+    
 # ----------- LOGOUT ----------------
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])  # checks if authentication token is passed or not
 def user_logout(request):
     if request.method == 'POST':
         try:
@@ -62,3 +87,11 @@ def user_logout(request):
             return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+"""
+POST
+http://localhost:8088/api/logout/
+
+Authorization: Token YOUR_AUTH_TOKEN"
+"""

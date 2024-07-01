@@ -25,7 +25,11 @@ def get_api_data(request):
         response = requests.get(url) #.json()
         if response.status_code == 200:
             data = response.json()
-            return render(request, 'api_data.html', {'apidata' : data})
+
+            # get username from session to display (OPTIONAL)
+            au_uname = request.session.get('active_uname', None)
+
+            return render(request, 'api_data.html', {'apidata' : data, 'au_uname': au_uname})
 
     except Exception as ex:
         print(ex)
@@ -193,64 +197,3 @@ def home(request):
         messages.warning(request, "Some error occured")
     return render(request, 'index.html')
 
-
-# ++++++++++++ Login by api & store the token in file for future use ++++++++++++++++
-import json # for storing to file in json format
-
-def login_by_api(request):
-    # URL for the login endpoint
-    login_url = 'http://localhost:8085/api/auth/login/'
-
-    # Credentials for authentication
-    credentials = {
-        'username': 'your_username',
-        'password': 'your_password'
-    }
-
-    # Sending POST request to login endpoint
-    response = requests.post(login_url, data=credentials)
-
-    # Extract the token from the response
-    token = response.json().get('token')
-
-    # Save token to a file
-    with open('token.json', 'w') as file:
-        json.dump({'token': token}, file)
-
-
-    print(f'Token: {token}')
-
-
-# ++++++++++ get the token from file & call to logout ++++++++++++
-def logout_by_json(request):
-    # Load token from file
-    with open('token.json', 'r') as file:
-        data = json.load(file)
-        token = data['token']
-
-    # Use the token for subsequent requests
-    headers = {
-        'Authorization': f'Token {token}'
-    }
-
-    # ........... further operations with this token
-
-    # response = requests.get('http://localhost:8000/api/some-protected-endpoint/', headers=headers)
-    # print(response.json())
-
-    # Example POST request
-    # data = {'key1': 'value1', 'key2': 'value2'}
-    # response = requests.post('http://localhost:8000/api/some-protected-endpoint/', headers=headers, json=data)
-    # print(response.json())
-
-
-# ============ USING Environment variables=================
-# >>>>>>> Seeting in env variable >>>>>>>>>>>> export API_TOKEN=your_token_here
-
-"""
-import os
-import requests
-
-# Read token from environment variable
-token = os.getenv('API_TOKEN')
-"""

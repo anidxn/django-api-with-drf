@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from authconsumer.views import loginuser, logoutuser, registeruser
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +26,9 @@ urlpatterns = [
     path('putdata/<int:compid>/', views.do_put_data, name='edit-company'),
     path('deldata/<int:compid>/', views.do_delete_data, name='del-company'),
     path('home/', views.home, name='home'),
+
+    path('loginuser/', loginuser, name='login-user'),
+    path('logoutuser/', logoutuser, name='logout-user'),
+    path('registeruser/', registeruser, name='register-user')
     # path('', include('getpost.url_getpost'))
 ]
